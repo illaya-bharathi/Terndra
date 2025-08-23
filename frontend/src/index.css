@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+*{
+      font-family: "Outfit", sans-serif;
+}
+
+
+a.active hr{
+  display: block;
+}
+
+/* Base track → always blue */
+.range-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #3F91C1; /* blue track */
+  border-radius: 9999px;
+}
+
+/* Thumb (circle) */
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  background: white;
+  border: 2px solid #3F91C1;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px; /* centers thumb */
+}
+
+/* Firefox support */
+.range-slider::-moz-range-track {
+  height: 6px;
+  background: #3F91C1;
+  border-radius: 9999px;
+}
+.range-slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  background: white;
+  border: 2px solid #3F91C1;
+  border-radius: 50%;
+  cursor: pointer;
+}
+/* Scrollbar Width */
+.scrollbar::-webkit-scrollbar {
+  width: 8px; 
+ 
+}
+
+/* Scrollbar Track */
+.scrollbar::-webkit-scrollbar-track {
+  background: #777676; 
+  border-radius: 10px;
+}
+
+/* Scrollbar Thumb */
+.scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #808080);
+  border-radius: 10px;
+}
+
+/* Scrollbar Thumb Hover */
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #808080); /* Darker on hover */
+}
