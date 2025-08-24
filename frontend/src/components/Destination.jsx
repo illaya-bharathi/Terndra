@@ -133,11 +133,7 @@ const Destination = () => {
         </button>
       </div>
     </div>
-<div className="my-4">
-  
-    <p className="text-gray-400">Showing 124 Results</p>
-    <hr className="border-r" />
-</div>
+
       
     </>
   );

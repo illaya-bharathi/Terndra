@@ -1,10 +1,16 @@
 import { useContext } from "react";
 import { TravelContext } from "../context/TravelContext";
 
-const TravelList = () => {
+const Travelers = () => {
   const { Travels, currency } = useContext(TravelContext);
 
   return (
+    <>
+    <div className="my-4">
+  
+    <p className="text-gray-400">Showing 124 Results</p>
+    <hr className="border-r" />
+</div>
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 ">
       {Travels.map((item, index) => (
         <div
@@ -42,8 +48,8 @@ const TravelList = () => {
           </div>
         </div>
       ))}
-    </div>
+    </div></>
   );
 };
 
-export default TravelList;
+export default Travelers;
