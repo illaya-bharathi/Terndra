@@ -28,10 +28,10 @@ export const assets={
 export const Travels = [
     {
         id:'1',
-        Name:'Toyoto Innova 2022',
+        name:'Toyoto Innova 2022',
         fuel:'petrol',
         comfort:seater,
-        img:travels,
+        image:travels,
         seats:'8 seats',
         rating:'4.2',
         price:1800
@@ -41,7 +41,7 @@ export const Travels = [
         Name:'Toyoto Innova 2022',
         fuel:'petrol',
         comfort:seater,
-        img:travels,
+        image:travels,
         seats:'8 seats',
         rating:'4.2',
         price:1800
@@ -51,7 +51,7 @@ export const Travels = [
         Name:'Toyoto Innova 2022',
         fuel:'petrol',
         comfort:seater,
-        img:travels,
+        image:travels,
         seats:'8 seats',
         rating:'',
         price:1800
