@@ -12,6 +12,7 @@ const Filter = () => {
   const [filterTravels, setFilterTravels] = useState([])
   const [Category, setCategory] = useState([])
   const [subCategory, setSubCategory] = useState([])
+  const [CategoryList,setCategoryList]=  useState([])
   const [price, setPrice] = useState(3600);
   const { currency, Travels } = useContext(TravelContext)
 
@@ -33,6 +34,15 @@ const Filter = () => {
     }
   }
 
+const toggleSubCategoryList = (e) => {
+  if (CategoryList.includes(e.target.value)) {
+    setCategoryList(prev => prev.filter(item => item !== e.target.value));
+  } else {
+    setCategoryList(prev => [...prev, e.target.value]);
+  }
+}
+
+
   const applyFilter = () => {
 
     let productsCopy = Travels.slice()
@@ -40,17 +50,23 @@ const Filter = () => {
     if (Category.length > 0) {
       productsCopy = productsCopy.filter(item => Category.includes(item.Category))
     }
-
+    if (subCategory.length > 0) {
+      productsCopy = productsCopy.filter(item => subCategory.includes(item.Category))
+    }
+    if (CategoryList.length > 0) {
+      productsCopy = productsCopy.filter(item => CategoryList.includes(item.Category))
+    }
+  setFilterTravels(productsCopy)
 
   }
 
   useEffect(() => {
     setFilterTravels(Travels)
-  })
+  },[Travels])
 
   useEffect(() => {
     applyFilter()
-  }, [Category, subCategory])
+  }, [Category, subCategory,CategoryList])
 
 
 
@@ -58,7 +74,7 @@ const Filter = () => {
     // Filter Sidebar 
     <div className="grid grid-cols-1 lg:grid-cols-4 w-full gap-4">
       {/* Left side - Filter */}
-      <div className="w-full xl:w-72 
+      <div className="w-full xl:w-72  *:
               border-b lg:border-b-0 lg:border-r border-gray-200 
               px-4 py-4 md:py-6 lg:overflow-y-scroll lg:h-screen scrollbar">
 
@@ -178,13 +194,13 @@ const Filter = () => {
           {openFeatures && (
             <div className="flex flex-col gap-2 mt-3">
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="WiFi" onChange={toggleCategory} />WiFi
+                <input type="checkbox" className="w-3" value="WiFi" onChange={toggleSubCategoryList} />WiFi
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Music System" onChange={toggleCategory} />Music System
+                <input type="checkbox" className="w-3" value="Music System" onChange={toggleSubCategoryList} />Music System
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Recliner Seats" onChange={toggleCategory} />Recliner Seats
+                <input type="checkbox" className="w-3" value="Recliner Seats" onChange={toggleSubCategoryList} />Recliner Seats
               </p>
             </div>
           )}
