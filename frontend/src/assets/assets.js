@@ -27,35 +27,45 @@ export const assets={
 
 export const Travels = [
     {
-        id:'1',
-        name:'Toyoto Innova 2022',
+        id:'aaaa',
+        name:'SUV',
         fuel:'petrol',
         comfort:seater,
+        category: "SUV",
+        subCategory: "4",
+           categoryList:'WiFi',
         image:travels,
         seats:'8 seats',
         rating:'4.2',
         price:1800
     },
         {
-        id:'1',
-        Name:'Toyoto Innova 2022',
+        id:'aaab',
+        Name:'Sedan',
         fuel:'petrol',
         comfort:seater,
+          category: "Sedan",
+        subCategory: "4",
+           categoryList:'Music System',
         image:travels,
         seats:'8 seats',
         rating:'4.2',
         price:1800
     },
         {
-        id:'1',
-        Name:'Toyoto Innova 2022',
+        id:'aaac',
+        Name:'Travellers',
         fuel:'petrol',
         comfort:seater,
+          category: "Traveller",
+        subCategory: "20",
+        categoryList:'Recliner Seats',
         image:travels,
         seats:'8 seats',
         rating:'',
         price:1800
     },
+   
 ]
 
 

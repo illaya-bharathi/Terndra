@@ -27,7 +27,7 @@ const TravelsItem = ({ name, image, price, fuel, comfort, seats }) => {
         <div className="flex justify-between items-center text-sm text-gray-700">
           <span className="flex gap-2 items-center">
             <img src={comfort} alt="comfort" className="w-5 h-5" />
-            <span>{seats} seats</span>
+            <span>. {seats}</span>
           </span>
           <span className="font-semibold text-gray-900">
             {currency}{price} <span className="text-xs text-gray-500">/day</span>

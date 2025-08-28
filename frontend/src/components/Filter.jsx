@@ -10,14 +10,14 @@ const Filter = () => {
   const [openSeat, setOpenSeat] = useState(false);
   const [openFeatures, setOpenFeatures] = useState(false);
   const [filterTravels, setFilterTravels] = useState([])
-  const [Category, setCategory] = useState([])
+  const [category, setCategory] = useState([])
   const [subCategory, setSubCategory] = useState([])
-  const [CategoryList,setCategoryList]=  useState([])
+  const [categoryList,setCategoryList]=  useState([])
   const [price, setPrice] = useState(3600);
   const { currency, Travels } = useContext(TravelContext)
 
   const toggleCategory = (e) => {
-    if (Category.includes(e.target.value)) {
+    if (category.includes(e.target.value)) {
       setCategory(prev => prev.filter(item => item !== e.target.value))
     }
     else {
@@ -35,7 +35,7 @@ const Filter = () => {
   }
 
 const toggleSubCategoryList = (e) => {
-  if (CategoryList.includes(e.target.value)) {
+  if (categoryList.includes(e.target.value)) {
     setCategoryList(prev => prev.filter(item => item !== e.target.value));
   } else {
     setCategoryList(prev => [...prev, e.target.value]);
@@ -47,15 +47,16 @@ const toggleSubCategoryList = (e) => {
 
     let productsCopy = Travels.slice()
 
-    if (Category.length > 0) {
-      productsCopy = productsCopy.filter(item => Category.includes(item.Category))
-    }
-    if (subCategory.length > 0) {
-      productsCopy = productsCopy.filter(item => subCategory.includes(item.Category))
-    }
-    if (CategoryList.length > 0) {
-      productsCopy = productsCopy.filter(item => CategoryList.includes(item.Category))
-    }
+   if (category.length > 0) {
+  productsCopy = productsCopy.filter(item => category.includes(item.category))
+}
+if (subCategory.length > 0) {
+  productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
+}
+if (categoryList.length > 0) {
+  productsCopy = productsCopy.filter(item => categoryList.includes(item.categoryList))
+}
+
   setFilterTravels(productsCopy)
 
   }
@@ -66,7 +67,7 @@ const toggleSubCategoryList = (e) => {
 
   useEffect(() => {
     applyFilter()
-  }, [Category, subCategory,CategoryList])
+  }, [category, subCategory,categoryList])
 
 
 
@@ -121,19 +122,19 @@ const toggleSubCategoryList = (e) => {
           {openVehicle && (
             <div className="flex flex-col gap-2 mt-3">
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Sedan" onChange={toggleCategory} />Sedan
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Sedan" onChange={toggleCategory} />Sedan
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="SUV" onChange={toggleCategory} />SUV
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="SUV" onChange={toggleCategory} />SUV
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Mini Van" onChange={toggleCategory} />Mini Van
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Mini Van" onChange={toggleCategory} />Mini Van
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Traveller" onChange={toggleCategory} />Traveller
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Traveller" onChange={toggleCategory} />Traveller
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Tourist Bus" onChange={toggleCategory} />Tourist Bus
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Tourist Bus" onChange={toggleCategory} />Tourist Bus
               </p>
             </div>
           )}
@@ -157,19 +158,19 @@ const toggleSubCategoryList = (e) => {
           {openSeat && (
             <div className="flex flex-col gap-2 mt-3">
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="4" onChange={toggleSubCategory} />4
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="4" onChange={toggleSubCategory} />4
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="6" onChange={toggleSubCategory} />6
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="6" onChange={toggleSubCategory} />6
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="8" onChange={toggleSubCategory} />8
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="8" onChange={toggleSubCategory} />8
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="12" onChange={toggleSubCategory} />12
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="12" onChange={toggleSubCategory} />12
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="20" onChange={toggleSubCategory} />20
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="20" onChange={toggleSubCategory} />20
               </p>
             </div>
           )}
@@ -194,13 +195,13 @@ const toggleSubCategoryList = (e) => {
           {openFeatures && (
             <div className="flex flex-col gap-2 mt-3">
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="WiFi" onChange={toggleSubCategoryList} />WiFi
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="WiFi" onChange={toggleSubCategoryList} />WiFi
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Music System" onChange={toggleSubCategoryList} />Music System
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Music System" onChange={toggleSubCategoryList} />Music System
               </p>
               <p className="flex gap-2">
-                <input type="checkbox" className="w-3" value="Recliner Seats" onChange={toggleSubCategoryList} />Recliner Seats
+                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Recliner Seats" onChange={toggleSubCategoryList} />Recliner Seats
               </p>
             </div>
           )}
@@ -211,7 +212,7 @@ const toggleSubCategoryList = (e) => {
       <div className="lg:col-span-3">
 
          <div className="my-4">
-    <p className="text-gray-400">Showing 124 Results</p>
+    <p className="text-gray-400">Showing {filterTravels.length} Results</p>
     <hr className="border-r" />
   </div>
 

@@ -9,6 +9,9 @@ const Destination = () => {
   const [endDate, setEndDate] = useState(null);
   const [openStart, setOpenStart] = useState(false);
   const [openEnd, setOpenEnd] = useState(false);
+  const [destination, setDestination] = useState("");
+const [filteredCars, setFilteredCars] = useState([]);
+
 
   const startRef = useRef();
   const endRef = useRef();
@@ -47,7 +50,8 @@ const Destination = () => {
         </h2>
         <div className="flex items-center gap-4 justify-center lg:justify-start">
           <img src={assets.location} alt="Location Icon" className="w-5 h-7" />
-          <p className="text-base font-medium truncate">Your Destination</p>
+          <p className="text-base font-medium truncate"   value={destination}   onChange={(e) => setDestination(e.target.value)}
+>Your Destination</p>
         </div>
       </div>
 
