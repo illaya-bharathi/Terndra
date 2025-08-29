@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 
 const createToken = (userId) => {
-  const payload = { id: userId };
+  const payload = userId ;
   return jwt.sign(payload, process.env.JWT_SECRET);
 };
 
@@ -75,4 +75,18 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser };
+// Get user data using token (jwt)
+
+const getUserData = async(req,res)=>{
+    try {
+        const {user} = req;
+        res.json({success:true,user})
+
+
+    } catch (error) {
+        console.error("Login Error:", error);
+    res.json({ success: false, message: error.message });
+    }
+}
+
+export { loginUser, registerUser,getUserData };
