@@ -68,3 +68,86 @@ export const addCar =  async (req,res)=>{
 }
 
 
+// Api to list Owner Cars
+
+export const getOwnerCars = async (req,res)=>{
+    try {
+        const {_id} = req.user;
+        const cars = await Car.find({owner:_id})
+        res.json({success:true,cars})
+
+    } catch (error) {
+         console.log(error.message);
+        res.json({success:false,message:error.message})
+    }
+}
+
+
+// Api to Toggle car availabilty
+
+export const toogleCarAvailability = async (req,res)=>{
+    try {
+        const {_id} = req.user;
+        const {carId} = req.body
+        const car = await Car.findById(carId)
+
+        // Checking is car belong to the user
+        if (car.owner.toString() !==_id.toString()) {
+          return res.json({success:false,message:"Unauthorized"})
+          
+        }
+
+        car.isAvaliable = !car.isAvaliable
+
+        await car.save()
+        res.json({success:true,message:"Availabilty Toggled"})
+
+    } catch (error) {
+         console.log(error.message);
+        res.json({success:false,message:error.message})
+    }
+}
+
+// Delete Car
+
+export const deleteCar = async (req,res)=>{
+    try {
+        const {_id} = req.user;
+        const {carId} = req.body
+        const car = await Car.findById(carId)
+
+        // Checking is car belong to the user
+        if (car.owner.toString() !==_id.toString()) {
+          return res.json({success:false,message:"Unauthorized"})
+          
+        }
+
+        car.owner = null
+        car.isAvaliable = false
+
+        await car.save()
+        res.json({success:true,message:"Availabilty Toggled"})
+
+    } catch (error) {
+         console.log(error.message);
+        res.json({success:false,message:error.message})
+    }
+}
+
+// Api to get dashboard Data
+
+export const getDashboardData = async (req,res)=>{
+    try {
+        const {_id,role} = req.user
+
+        if(role !=='owner'){
+                      return res.json({success:false,message:"Unauthorized"})
+
+        }
+
+        const cars = await Car.find({owner:_id})
+    } catch (error) {
+         console.log(error.message);
+        res.json({success:false,message:error.message})
+    }
+}
