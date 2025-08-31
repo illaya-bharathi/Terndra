@@ -28,7 +28,7 @@ export const assets={
 export const Travels = [
     {
         id:'aaaa',
-        name:'SUV',
+        name:'BMW',
         fuel:'petrol',
         comfort:seater,
         category: "SUV",

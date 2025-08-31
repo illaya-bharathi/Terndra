@@ -1,15 +1,36 @@
-import { createContext } from "react";
-import { Travels } from "../assets/assets";
+import { createContext, useEffect, useState } from "react";
+import axios from "axios";
 
 export const TravelContext = createContext();
 
 const TravelContextProvider = (props) => {
-  const currency = '$';
+  const currency = "$";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [products, setProducts] = useState([]);
 
+  // Fetch cars
+  const getCarsData = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/car/list`);
+      if (response.data.success) {
+        setProducts(response.data.cars);
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.log("Error fetching cars:", error.message);
+    }
+  };
+
+  // Load cars on mount
+  useEffect(() => {
+    getCarsData();
+  }, []);
 
   const value = {
     currency,
-    Travels,
+    products,
+    setProducts,
   };
 
   return (

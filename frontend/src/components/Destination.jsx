@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { assets } from "../assets/assets";
-import Filter from "./Filter";
 
 const Destination = () => {
   const [startDate, setStartDate] = useState(null);
@@ -138,7 +137,7 @@ const [filteredCars, setFilteredCars] = useState([]);
 
     {/* Search Button */}
     <div className="w-full md:w-auto flex justify-center lg:justify-end mt-3 lg:mt-0">
-      <button className="flex items-center h-10 bg-[#3F91C1] text-white px-6 rounded-lg hover:bg-[#3379a5] transition">
+      <button className="flex items-center  bg-[#3F91C1] text-white px-7 py-4 rounded-lg hover:bg-[#3379a5] transition">
         Search
       </button>
     </div>

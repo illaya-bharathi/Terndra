@@ -9,6 +9,7 @@ import connectCloudinary from "./config/cloudinary.js";
 
 
 
+
 const app= express()
 
 
@@ -24,7 +25,8 @@ app.use(cors())
 // Routes
 
 app.use('/api/user',UserRouter)
-app.use('/api/owner',ownerRouter)
+app.use('/api/car',ownerRouter)
+
 
 app.get('/',(req,res)=>{
     res.send('API WORKING')

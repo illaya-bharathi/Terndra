@@ -7,7 +7,7 @@ const createToken = (userId) => {
   return jwt.sign(payload, process.env.JWT_SECRET);
 };
 
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -51,7 +51,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -75,18 +75,21 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Get user data using token (jwt)
+export const adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-const getUserData = async(req,res)=>{
-    try {
-        const {user} = req;
-        res.json({success:true,user})
-
-
-    } catch (error) {
-        console.error("Login Error:", error);
-    res.json({ success: false, message: error.message });
+    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      const token = jwt.sign( email+password , process.env.JWT_SECRET,);
+      res.json({ success: true, token });
+    } else {
+      res.json({ success: false, message: "Invalid credentials" });
     }
+
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
 }
 
-export { loginUser, registerUser,getUserData };
+

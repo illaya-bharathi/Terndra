@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets";
-import { TravelContext } from "../context/TravelContext";
 
-import TravelsItem from "./TravelsItem";
+
+import TravelsItem from "../components/TravelsItem"
+import { TravelContext } from "../context/TravelContext";
+import { assets } from "../assets/assets";
 
 
 const Filter = () => {
@@ -11,10 +12,10 @@ const Filter = () => {
   const [openFeatures, setOpenFeatures] = useState(false);
   const [filterTravels, setFilterTravels] = useState([])
   const [category, setCategory] = useState([])
-  const [subCategory, setSubCategory] = useState([])
-  const [categoryList,setCategoryList]=  useState([])
+  const [seatCapacity, setSeatCapacity] = useState([])
+  const [features,setFeatures]=  useState([])
   const [price, setPrice] = useState(3600);
-  const { currency, Travels } = useContext(TravelContext)
+  const { currency,products,setProducts } = useContext(TravelContext)
 
   const toggleCategory = (e) => {
     if (category.includes(e.target.value)) {
@@ -25,49 +26,64 @@ const Filter = () => {
     }
   }
 
-  const toggleSubCategory = (e) => {
-    if (subCategory.includes(e.target.value)) {
-      setSubCategory(prev => prev.filter(item => item !== e.target.value))
-
+   const toggleSeatCapacity = (e) => {
+    if (seatCapacity.includes(Number(e.target.value))) {
+      setSeatCapacity((prev) => prev.filter((item) => item !== Number(e.target.value)));
     } else {
-      setSubCategory(prev => [...prev, e.target.value])
+      setSeatCapacity((prev) => [...prev, Number(e.target.value)]);
     }
-  }
+  };
+  const toggleFeatures = (e) => {
+    if (features.includes(e.target.value)) {
+      setFeatures((prev) => prev.filter((item) => item !== e.target.value));
+    } else {
+      setFeatures((prev) => [...prev, e.target.value]);
+    }
+  };
 
-const toggleSubCategoryList = (e) => {
-  if (categoryList.includes(e.target.value)) {
-    setCategoryList(prev => prev.filter(item => item !== e.target.value));
-  } else {
-    setCategoryList(prev => [...prev, e.target.value]);
-  }
-}
 
+ const applyFilter = () => {
+    let productsCopy = [...products];
 
-  const applyFilter = () => {
+    if (category.length > 0) {
+      productsCopy = productsCopy.filter((item) =>
+        category.includes(item.category)
+      );
+    }
 
-    let productsCopy = Travels.slice()
+    if (seatCapacity.length > 0) {
+      productsCopy = productsCopy.filter((item) =>
+        seatCapacity.includes(item.seating_capacity)
+      );
+    }
 
-   if (category.length > 0) {
-  productsCopy = productsCopy.filter(item => category.includes(item.category))
-}
-if (subCategory.length > 0) {
-  productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
-}
-if (categoryList.length > 0) {
-  productsCopy = productsCopy.filter(item => categoryList.includes(item.categoryList))
-}
+    if (features.length > 0) {
+      productsCopy = productsCopy.filter((item) =>
+        features.includes(item.facility)
+      );
+    }
 
-  setFilterTravels(productsCopy)
+    // Price filter
+    productsCopy = productsCopy.filter((item) => item.price <= price);
 
-  }
+    setFilterTravels(productsCopy);
+  };
 
   useEffect(() => {
-    setFilterTravels(Travels)
-  },[Travels])
+    setFilterTravels(products);
+  }, [products]);
+
+  useEffect(() => {
+    applyFilter();
+  }, [category, seatCapacity, features, price]);
+
+  useEffect(() => {
+    setFilterTravels(products)
+  },[])
 
   useEffect(() => {
     applyFilter()
-  }, [category, subCategory,categoryList])
+  }, [category, seatCapacity,features,price])
 
 
 
@@ -99,7 +115,7 @@ if (categoryList.length > 0) {
             max="5000"
             defaultValue="3600"
             className="w-full range-slider"
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(e) => setPrice (Number(e.target.value))}
           />
         </div>
 
@@ -121,21 +137,18 @@ if (categoryList.length > 0) {
 
           {openVehicle && (
             <div className="flex flex-col gap-2 mt-3">
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Sedan" onChange={toggleCategory} />Sedan
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="SUV" onChange={toggleCategory} />SUV
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Mini Van" onChange={toggleCategory} />Mini Van
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Traveller" onChange={toggleCategory} />Traveller
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Tourist Bus" onChange={toggleCategory} />Tourist Bus
-              </p>
+              {["Sedan", "SUV", "Mini Van", "Traveller", "Tourist Bus"].map(
+                (type) => (
+                  <label key={type} className="flex gap-2">
+                    <input
+                      type="checkbox"
+                      value={type}
+                      onChange={toggleCategory}
+                    />
+                    {type}
+                  </label>
+                )
+              )}
             </div>
           )}
         </div>
@@ -155,23 +168,18 @@ if (categoryList.length > 0) {
               className="w-6 h-3"
             />
           </h2>
-          {openSeat && (
+        {openSeat && (
             <div className="flex flex-col gap-2 mt-3">
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="4" onChange={toggleSubCategory} />4
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="6" onChange={toggleSubCategory} />6
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="8" onChange={toggleSubCategory} />8
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="12" onChange={toggleSubCategory} />12
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="20" onChange={toggleSubCategory} />20
-              </p>
+              {[4, 6, 8, 12, 20].map((num) => (
+                <label key={num} className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    value={num}
+                    onChange={toggleSeatCapacity}
+                  />
+                  {num}
+                </label>
+              ))}
             </div>
           )}
         </div>
@@ -194,15 +202,16 @@ if (categoryList.length > 0) {
 
           {openFeatures && (
             <div className="flex flex-col gap-2 mt-3">
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="WiFi" onChange={toggleSubCategoryList} />WiFi
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Music System" onChange={toggleSubCategoryList} />Music System
-              </p>
-              <p className="flex gap-2">
-                <input type="checkbox" className="w-4 checkbox border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 checked:text-orange-800" value="Recliner Seats" onChange={toggleSubCategoryList} />Recliner Seats
-              </p>
+              {["WiFi", "Music System", "Recliner Seats","AC"].map((feat) => (
+                <label key={feat} className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    value={feat}
+                    onChange={toggleFeatures}
+                  />
+                  {feat}
+                </label>
+              ))}
             </div>
           )}
         </div>
@@ -218,9 +227,9 @@ if (categoryList.length > 0) {
 
   {/* Grid for cards */}
   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-    {filterTravels.map((item, index) => (
+    {filterTravels.map((item) => (
       <TravelsItem
-        key={index}
+        key={item._id}
         image={item.image}
         id={item.id}
         price={item.price}
