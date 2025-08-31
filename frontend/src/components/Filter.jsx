@@ -227,9 +227,9 @@ const Filter = () => {
 
   {/* Grid for cards */}
   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-    {filterTravels.map((item) => (
+    {filterTravels.map((item,index) => (
       <TravelsItem
-        key={item._id}
+        key={index}
         image={item.image}
         id={item.id}
         price={item.price}

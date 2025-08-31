@@ -3,7 +3,7 @@ import cors from "cors"
 import 'dotenv/config'
 import connectDb from "./config/mongodb.js";
 import UserRouter from "./routes/userRouter.js";
-import ownerRouter from "./routes/ownerRoutes.js";
+import ownerRouter from "./routes/carRoute.js";
 import connectCloudinary from "./config/cloudinary.js";
 
 

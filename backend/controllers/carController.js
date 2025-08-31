@@ -18,9 +18,13 @@ export const addCar = async (req, res) => {
     const imageFile = req.files?.image?.[0];
     const comfortFile = req.files?.comfort?.[0];
 
-    if (!imageFile || !comfortFile) {
-      return res.json({ success: false, message: "Both car image and comfort image are required" });
+    if (!imageFile) {
+      return res.json({ success: false, message: "car image  are required" });
     }
+      if (!comfortFile) {
+      return res.json({ success: false, message: " comfort image are required" });
+    }
+
 
     // Upload images to Cloudinary
     const imageResult = await cloudinary.uploader.upload(imageFile.path, { folder: "car_images" });
@@ -61,6 +65,19 @@ export const listCars = async (req,res) =>{
         console.log(error.message);
     res.json({ success: false, message: error.message });
     }
+}
+
+
+// remove cars
+
+export const removeCars = async () =>{
+   try {
+    await Car.findByIdAndDelete(req.body.id)
+      res.json({success:true,message:"product Deleted"})
+   } catch (error) {
+     console.log(error.message);
+    res.json({ success: false, message: error.message });
+   }
 }
 
 
