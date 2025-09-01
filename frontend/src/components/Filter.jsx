@@ -93,7 +93,7 @@ const Filter = () => {
       {/* Left side - Filter */}
       <div className="w-full xl:w-72  *:
               border-b lg:border-b-0 lg:border-r border-gray-200 
-              px-4 py-4 md:py-6 lg:overflow-y-scroll lg:h-screen scrollbar">
+              px-3 py-4 md:py-6 lg:overflow-y-scroll lg:h-screen scrollbar">
 
         {/* Header */}
         <div className="flex justify-between">

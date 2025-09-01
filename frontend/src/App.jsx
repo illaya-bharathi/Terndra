@@ -1,16 +1,38 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import NavBar from './components/NavBar'
-import Home from './pages/Home'
-const App = () => {
+import React, { useState } from "react";
+import {  Routes, Route } from "react-router-dom";
+
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import LoginForm from "./pages/LoginForm";
+
+import Home from "./pages/Home";
+import { Allcomponents } from "./components/Allcomponents";
+
+function App() {
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
-   <div className="py-2 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-  <NavBar />
-  <Routes>
-    <Route path='/' element={<Home />} />
-  </Routes>
-</div>
-  )
+ 
+      <div className="min-h-screen flex flex-col relative">
+        <Header onLoginClick={() => setShowLogin(true)} />
+
+        <main id="main-content" className="flex-grow">
+          <Routes>
+            <Route path="/"element={<Home />}/>
+                 
+             
+           
+          
+            <Route path="/view-car" element = {<Allcomponents />}/>
+          </Routes>
+        </main>
+
+        <Footer />
+
+        {showLogin && <LoginForm onClose={() => setShowLogin(false)} />}
+      </div>
+ 
+  );
 }
 
-export default App
+export default App;
