@@ -7,6 +7,7 @@ const TravelContextProvider = (props) => {
   const currency = "$";
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [products, setProducts] = useState([]);
+  const [token,setToken] = useState(localStorage.getItem("token"))
 
   // Fetch cars
   const getCarsData = async () => {
@@ -22,15 +23,19 @@ const TravelContextProvider = (props) => {
     }
   };
 
+  
   // Load cars on mount
   useEffect(() => {
     getCarsData();
   }, []);
 
+
+
+
   const value = {
     currency,
     products,
-    setProducts,
+    setProducts,token,setToken,backendUrl
   };
 
   return (

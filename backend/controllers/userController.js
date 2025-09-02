@@ -2,10 +2,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 
-const createToken = (userId) => {
-  const payload = userId ;
-  return jwt.sign(payload, process.env.JWT_SECRET);
-};
+const createToken = (id) =>{
+    return jwt.sign({id},process.env.JWT_SECRET)
+}
+
 
 export const registerUser = async (req, res) => {
   try {
@@ -74,6 +74,8 @@ export const loginUser = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+
 
 export const adminLogin = async (req, res) => {
   try {

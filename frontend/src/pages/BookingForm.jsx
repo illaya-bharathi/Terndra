@@ -9,6 +9,9 @@ import {
   X,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useContext } from "react";
+import { TravelContext } from "../context/TravelContext";
 
 
 // ---------- Helper to format time ----------
@@ -103,8 +106,8 @@ const CustomDateAndTimePicker = ({ onClose, onContinue, initialSelection }) => {
     setDateSelection({
       startDate: null,
       endDate: null,
-      startTime: "06:00 AM",
-      endTime: "03:00 PM",
+      startTime: "",
+      endTime: "",
     });
   };
 
@@ -186,8 +189,8 @@ const CustomDateAndTimePicker = ({ onClose, onContinue, initialSelection }) => {
       </div>
 
       <div className="grid grid-cols-7 text-center text-xs text-gray-500 font-medium mb-2">
-        {["S", "M", "T", "W", "T", "F", "S"].map((day) => (
-          <span key={day}>{day}</span>
+        {["S", "M", "T", "W", "T", "F", "S"].map((day,index) => (
+          <span key={index}>{day}</span>
         ))}
       </div>
       <div className="grid grid-cols-7 text-center text-sm flex-1">
@@ -343,43 +346,77 @@ const BookingForm = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [activeLocationField, setActiveLocationField] = useState(null);
-
+  const {backendUrl,token,setToken} = useContext(TravelContext)
+const [errors,setErrors] = useState({})
+const navigate = useNavigate()
   const [dateSelection, setDateSelection] = useState({
     startDate: new Date(),
-    endDate: null,
-    startTime: "06:00 AM",
-    endTime: "03:00 PM",
+    endDate:new Date() ,
+    startTime: "",
+    endTime: "",
   });
 
   const [formData, setFormData] = useState({
     destination: "",
-    pickupLocation: "",
-    dropLocation: "",
-    passengers: "",
+    pickuppoint: "",
+    droppoint: "",
+    passangercount: "",
+    tripbookingtype:tripType,
+    "tripDates": {
+       startDate: dateSelection.startDate,
+    endDate: dateSelection.endDate, 
+    startTime: dateSelection.startTime,
+    endTime: dateSelection.endTime,
+  }
   });
-const [errors,setErrors] = useState({})
-const navigate = useNavigate()
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted:", { ...formData, ...dateSelection });
     const validationErrors = {}
     if(formData.destination===""){
       validationErrors.destination = "Select your Destination"
     }
-    if(formData.pickupLocation===""){
-      validationErrors.pickupLocation = "Select your Pickup Location"
+    if(formData.pickuppoint===""){
+      validationErrors.pickuppoint = "Select your Pickup Location"
     }
-    if(formData.dropLocation===""){
-      validationErrors.dropLocation = "Select your dropLocation"
+    if(formData.droppoint===""){
+      validationErrors.droppoint = "Select your droppoint"
     }
-     if(formData.passengers===""){
-      validationErrors.passengers = "Select passengers"
+     if(formData.passangercount===""){
+      validationErrors.passangercount = "Select passangercount"
     }
+
+  if (formData.pickuppoint && formData.droppoint && formData.pickuppoint === formData.droppoint) {
+    validationErrors.droppoint = "Pickup and Drop location cannot be the same";
+  }
 
     setErrors(validationErrors)
 
     if(Object.keys(validationErrors).length===0){
-      navigate('/view-car')
+      const bookingData ={
+          destination:formData.destination,
+          pickuppoint:formData.pickuppoint,
+          droppoint:formData.droppoint,
+          passangercount:formData.passangercount,
+  tripbookingtype: formData.tripbookingtype,           
+    tripDates: {
+          startDate: dateSelection.startDate,
+          endDate: dateSelection.endDate,
+          startTime: dateSelection.startTime,
+          endTime: dateSelection.endTime,
+        },
+      }
+      try {
+        const response = await axios.post(`${backendUrl}/api/trip/booking`,bookingData,{headers:{Authorization: {token}}})
+        if(response.data.success){       
+         localStorage.getItem('token')
+              console.log('booking created')
+              navigate('/view-car')
+        }
+      } catch (error) {
+        console.log(error.message)
+      }
     }
   };
 
@@ -394,13 +431,34 @@ const navigate = useNavigate()
   };
 
   const handleLocationSelect = (location) => {
-    if (activeLocationField === "pickup") {
-      setFormData({ ...formData, pickupLocation: location });
-    } else if (activeLocationField === "drop") {
-      setFormData({ ...formData, dropLocation: location });
+  if (activeLocationField === "pickup") {
+    setFormData({ ...formData, pickuppoint: location });
+
+    // clear pickup error if exists
+    if (errors.pickuppoint) {
+      setErrors({ ...errors, pickuppoint: "" });
     }
-    setShowLocationPicker(false);
-  };
+  } else if (activeLocationField === "drop") {
+    setFormData({ ...formData, droppoint: location });
+
+    // clear drop error if exists
+    if (errors.droppoint) {
+      setErrors({ ...errors, droppoint: "" });
+    }
+  }
+  setShowLocationPicker(false);
+};
+
+
+  const handleChange = (field, value) => {
+  setFormData({ ...formData, [field]: value });
+
+  // clear error for that field if exists
+  if (errors[field]) {
+    setErrors({ ...errors, [field]: "" });
+  }
+};
+
    
   return (
     <div className="bg-white rounded-xl p-7 h-[580px] w-[500px] shadow-md relative mx-auto mt-0">
@@ -408,9 +466,9 @@ const navigate = useNavigate()
         Your Trip, Our Responsibility
       </h3>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Destination */}
-       <div className="flex flex-col">
+     <form onSubmit={handleSubmit} className="space-y-4">
+  {/* Destination */}
+  <div className="flex flex-col">
     <label className="block text-sm mb-1">Enter Destination</label>
     <div className="bg-gray-100 flex items-center gap-2 p-3 rounded-lg">
       <MapPin size={16} className="text-gray-500" />
@@ -419,9 +477,7 @@ const navigate = useNavigate()
         className="bg-transparent flex-1 text-sm outline-none"
         placeholder="Destination"
         value={formData.destination}
-        onChange={(e) =>
-          setFormData({ ...formData, destination: e.target.value })
-        }
+        onChange={(e) => handleChange("destination", e.target.value)}
       />
     </div>
     {errors.destination && (
@@ -429,28 +485,28 @@ const navigate = useNavigate()
     )}
   </div>
 
-        {/* Dates */}
-        <div>
-          <label className="block text-sm mb-1">Trip Dates</label>
-          <div
-            className="bg-gray-100 p-3 rounded-lg flex items-center gap-2 cursor-pointer"
-            onClick={() => setShowCalendar(true)}
-          >
-            <Calendar size={16} className="text-gray-500" />
-            <span className="text-sm">
-              {dateSelection.startDate
-                ? dateSelection.startDate?.toLocaleDateString()
-                : "Select Start Date"}{" "}
-              -{" "}
-              {dateSelection.endDate
-                ? dateSelection.endDate?.toLocaleDateString()
-                : "Select End Date"}
-            </span>
-          </div>
-        </div>
+  {/* Dates */}
+  <div>
+    <label className="block text-sm mb-1">Trip Dates</label>
+    <div
+      className="bg-gray-100 p-3 rounded-lg flex items-center gap-2 cursor-pointer"
+      onClick={() => setShowCalendar(true)}
+    >
+      <Calendar size={16} className="text-gray-500" />
+      <span className="text-sm">
+        {dateSelection.startDate
+          ? dateSelection.startDate?.toLocaleDateString()
+          : "Select Start Date"}{" "}
+        -{" "}
+        {dateSelection.endDate
+          ? dateSelection.endDate?.toLocaleDateString()
+          : "Select End Date"}
+      </span>
+    </div>
+  </div>
 
-        {/* Pickup & Drop */}
-         <div className="flex flex-col gap-2">
+  {/* Pickup & Drop */}
+  <div className="flex flex-col gap-2">
     <label className="block text-sm mb-1">Pickup & Drop location</label>
     <div className="flex gap-3">
       <div className="flex-1 flex flex-col">
@@ -458,12 +514,12 @@ const navigate = useNavigate()
           type="text"
           placeholder="Pickup Point"
           className="bg-gray-100 flex-1 p-3 rounded-lg text-sm cursor-pointer"
-          value={formData.pickupLocation}
+          value={formData.pickuppoint}
           readOnly
           onClick={() => handleLocationClick("pickup")}
         />
-        {errors.pickupLocation && (
-          <p className="text-red-500 text-xs mt-1">{errors.pickupLocation}</p>
+        {errors.pickuppoint && (
+          <p className="text-red-500 text-xs mt-1">{errors.pickuppoint}</p>
         )}
       </div>
 
@@ -472,68 +528,73 @@ const navigate = useNavigate()
           type="text"
           placeholder="Drop Point"
           className="bg-gray-100 flex-1 p-3 rounded-lg text-sm cursor-pointer"
-          value={formData.dropLocation}
+          value={formData.droppoint}
           readOnly
           onClick={() => handleLocationClick("drop")}
         />
-        {errors.dropLocation && (
-          <p className="text-red-500 text-xs mt-1">{errors.dropLocation}</p>
+        {errors.droppoint && (
+          <p className="text-red-500 text-xs mt-1">{errors.droppoint}</p>
         )}
       </div>
     </div>
   </div>
 
-        {/* Trip type */}
-        <div className="flex rounded-lg overflow-hidden border">
-          <button
-            type="button"
-            onClick={() => setTripType("single")}
-            className={`flex-1 py-3 text-sm transition ${
-              tripType === "single"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-gray-800"
-            }`}
-          >
-            Single
-          </button>
-          <button
-            type="button"
-            onClick={() => setTripType("round")}
-            className={`flex-1 py-3 text-sm transition ${
-              tripType === "round"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-gray-800"
-            }`}
-          >
-            Round
-          </button>
-        </div>
-        {/* Passengers */}
-        <div className="flex items-center bg-gray-100 p-3 rounded-lg gap-2">
-          <Users size={16} className="text-gray-500" />
-          <input
-            type="number"
-            min="1"
-            placeholder="Enter number of passengers"
-            className="w-full bg-transparent text-sm outline-none"
-            value={formData.passengers}
-            onChange={(e) =>
-              setFormData({ ...formData, passengers: e.target.value })
-            }
-          />
-            
+  {/* Trip type */}
+  <div className="flex rounded-lg overflow-hidden border">
+<button
+  type="button"
+  onClick={() => {
+    setTripType("single");
+    setFormData({ ...formData, tripbookingtype: "single" }); 
+  }}
+  className={`flex-1 py-3 text-sm transition ${
+    tripType === "single"
+      ? "bg-blue-600 text-white"
+      : "bg-white text-gray-800"
+  }`}
+>
+  Single
+  </button>
+<button
+  type="button"
+  onClick={() => {
+    setTripType("round");
+    setFormData({ ...formData, tripbookingtype: "round" }); 
+  }}
+  className={`flex-1 py-3 text-sm transition ${
+    tripType === "round"
+      ? "bg-blue-600 text-white"
+      : "bg-white text-gray-800"
+  }`}
+>
+  Round
+</button>
+  </div>
 
-        </div>
-        {errors.passengers && <span className="text-red-500 text-xs mt-1">{errors.passengers}</span>}
+  {/* passangercount */}
+  <div className="flex items-center bg-gray-100 p-3 rounded-lg gap-2">
+    <Users size={16} className="text-gray-500" />
+    <input
+      type="number"
+      min="1"
+      placeholder="Enter number of passangercount"
+      className="w-full bg-transparent text-sm outline-none"
+      value={formData.passangercount}
+      onChange={(e) => handleChange("passangercount", e.target.value)}
+    />
+  </div>
+  {errors.passangercount && (
+    <span className="text-red-500 text-xs mt-1">{errors.passangercount}</span>
+  )}
 
-      
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white text-sm py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-        >
-          Start Trip
-        </button>
-      </form>
+  <button
+    type="submit"
+    className="w-full bg-blue-600 text-white text-sm py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+  >
+    Start Trip
+  </button>
+</form>
+
 
       {/* Calendar Overlay */}
       {showCalendar && (

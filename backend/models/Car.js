@@ -5,9 +5,9 @@ import mongoose from "mongoose";
 
 const carSchema = new mongoose.Schema({
  
-  brand:{ type: String, required: true },
-  name: { type: String, required: true },
-  fuel_type: { type: String, required: true },
+  brand:{ type: String, required: true,set: v => v.toUpperCase() },
+  name: { type: String, required: true,set: v => v.toUpperCase() },
+  fuel_type: { type: String, required: true,set: v => v.toUpperCase() },
   comfort: { type: String, required: true, },
   category: { type: String, required: true ,set: v => v.toUpperCase()},
   seating_capacity: { type: Number, required: true },

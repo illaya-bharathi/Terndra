@@ -45,23 +45,25 @@ const Filter = () => {
  const applyFilter = () => {
     let productsCopy = [...products];
 
-    if (category.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        category.includes(item.category)
-      );
-    }
+if (category.length > 0) {
+  productsCopy = productsCopy.filter((item) =>
+    category.includes(item.name)   
+  );
+}
 
-    if (seatCapacity.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        seatCapacity.includes(item.seating_capacity)
-      );
-    }
+if (seatCapacity.length > 0) {
+  productsCopy = productsCopy.filter((item) =>
+    seatCapacity.includes(item.seating_capacity) 
+  );
+}
 
-    if (features.length > 0) {
-      productsCopy = productsCopy.filter((item) =>
-        features.includes(item.facility)
-      );
-    }
+if (features.length > 0) {
+  productsCopy = productsCopy.filter((item) =>
+    features.includes(item.facility) 
+  );
+}
+
+
 
     // Price filter
     productsCopy = productsCopy.filter((item) => item.price <= price);

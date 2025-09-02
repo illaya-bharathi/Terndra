@@ -1,24 +1,37 @@
-import React, { useState } from "react";
-import { Menu, X, Smartphone, LogIn } from "lucide-react";
+import React, { useContext, useState } from "react";
+import { Menu, X, Smartphone, LogIn, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { TravelContext } from "../context/TravelContext";
 
 const Header = ({ onLoginClick }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const {token,setToken} = useContext(TravelContext)
 
   const links = [
-    { name: "Home", href: "#home" }, // ✅ Corrected from #top to #home
-    { name: "About Us", href: "#about-section" },
-    { name: "How it Works", href: "#how-it-works-section" },
-    { name: "Contact Us", href: "#contact-section" },
+    { name: "Home", href: "/" }, 
+    { name: "About Us", href: "/about" },
+    { name: "How it Works", href: "/howitworks" },
+    { name: "Contact Us", href: "/contactus" },
   ];
-
   const handleLinkClick = (link) => {
-    if (link.href) {
-      const el = document.getElementById(link.href.replace("#", ""));
+    if (link.href.startsWith("/")) {
+      navigate(link.href);
+    } else {
+      const el = document.getElementById(link.href.replace("/", ""));
       if (el) el.scrollIntoView({ behavior: "smooth" });
     }
     setIsMenuOpen(false);
   };
+
+ 
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  setToken(null);
+  navigate("/"); 
+};
+
 
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
@@ -27,7 +40,7 @@ const Header = ({ onLoginClick }) => {
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => handleLinkClick({ href: "#home" })} // ✅ Corrected here as well
+            onClick={() => handleLinkClick({ href: "/" })} 
           >
             <img src="/logo.png" alt="Logo" className="w-[50px] h-[50px]" />
             <img src="/name.png" alt="Brand" className="h-[40px]" />
@@ -51,13 +64,22 @@ const Header = ({ onLoginClick }) => {
               <Smartphone size={20} /> Get the App
             </motion.button>
 
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 border border-gray-400 text-gray-800 px-5 py-2 rounded-xl"
-              onClick={onLoginClick}
-            >
-              <LogIn size={20} /> Log In
-            </motion.button>
+   <motion.button
+  whileTap={{ scale: 0.95 }}
+  className="flex items-center justify-center gap-2 border border-gray-400 text-gray-800 py-2 px-4 rounded-xl"
+  onClick={() => {
+    if (token) {
+      handleLogout();
+    } else {
+      onLoginClick();
+    }
+    setIsMenuOpen(false);
+  }}
+>
+  {token ? <><LogOut size={20} /> Logout</> : <><LogIn size={20} /> Login</>}
+</motion.button>
+
+
           </nav>
 
           <button
@@ -104,7 +126,22 @@ const Header = ({ onLoginClick }) => {
                         setIsMenuOpen(false);
                       }}
                     >
-                      <LogIn size={20} /> Log In
+<motion.button
+  whileTap={{ scale: 0.95 }}
+  className="flex items-center justify-center gap-2 border border-gray-400 text-gray-800 py-2 px-4 rounded-xl"
+  onClick={() => {
+    if (token) {
+      handleLogout();
+    } else {
+      onLoginClick();
+    }
+    setIsMenuOpen(false);
+  }}
+>
+  {token ? <><LogOut size={20} /> Logout</> : <><LogIn size={20} /> Login</>}
+</motion.button>
+
+
                     </motion.button>
                   </div>
                 </nav>

@@ -3,8 +3,10 @@ import cors from "cors"
 import 'dotenv/config'
 import connectDb from "./config/mongodb.js";
 import UserRouter from "./routes/userRouter.js";
-import ownerRouter from "./routes/carRoute.js";
+import CarRouter from "./routes/carRoute.js";
 import connectCloudinary from "./config/cloudinary.js";
+import tripRoutes from "./routes/tripRoute.js";
+
 
 
 
@@ -25,7 +27,8 @@ app.use(cors())
 // Routes
 
 app.use('/api/user',UserRouter)
-app.use('/api/car',ownerRouter)
+app.use('/api/car',CarRouter)
+app.use('/api/trip',tripRoutes)
 
 
 app.get('/',(req,res)=>{
